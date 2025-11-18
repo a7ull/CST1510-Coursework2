@@ -1,0 +1,6 @@
+dataset_id,name,rows,columns,uploaded_by,upload_date
+1,Customer_Churn,5000,15,data_scientist,2024-01-15
+2,Financial_Fraud,150000,22,cyber_admin,2024-03-01
+3,Server_Logs,800000,10,data_scientist,2024-05-10
+4,Image_Classification,1000,5,data_scientist,2024-08-20
+5,HR_Salary,3000,12,it_admin,2024-09-01
