@@ -108,7 +108,7 @@ from app.data.incidents import (
 from app.data.datasets import (
     insert_dataset,
     get_all_datasets,
-    update_dataset_category,
+    update_dataset_name,
     delete_dataset
 )
 
@@ -201,7 +201,7 @@ def main():
                     conn = connect_database()
                     id_ = input("Dataset ID: ")
                     new_name = input("New Name: ")
-                    rows = update_dataset_category(conn, id_, new_name)
+                    rows = update_dataset_name(conn, id_, new_name)
                     conn.close()
                     print("Rows updated:", rows)
                 elif choice == "4":

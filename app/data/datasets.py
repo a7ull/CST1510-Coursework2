@@ -26,7 +26,7 @@ def get_all_datasets():
     return df
 
 # UPDATE (example: category)
-def update_dataset_category(conn, dataset_id, new_name):
+def update_dataset_name(conn, dataset_id, new_name):
     cursor = conn.cursor()
     cursor.execute(
         "UPDATE datasets_metadata SET name=? WHERE dataset_id=?",
