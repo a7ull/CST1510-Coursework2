@@ -1,33 +1,25 @@
+from app.services.user_service import login_user, register_user,migrate_users_from_file
 from app.data.db import connect_database
 from app.data.schema import create_all_tables
-
-from app.services.user_service import (
-    register_user,
-    login_user,
-    migrate_users_from_file
-)
-
-from app.data.incidents import insert_incident, get_all_incidents
-from app.data.datasets import insert_dataset, get_all_datasets
-from app.data.tickets import insert_ticket, get_all_tickets
-
 import pandas as pd
 from pathlib import Path
 
-
-# ----------------------------------------------------------
-# PART 9 — COMPLETE AUTOMATED DATABASE SETUP
-# ----------------------------------------------------------
+#Database setup
 def load_csv_to_table(conn, csv_path, table_name):
-    """Load a CSV file into the database."""
     if not csv_path.exists():
         print(f"CSV not found: {csv_path}")
         return 0
 
     df = pd.read_csv(csv_path)
-    df.to_sql(table_name, conn, if_exists="append", index=False)
-    print(f"Loaded {len(df)} rows into {table_name}")
-    return len(df)
+
+    try:
+        df.to_sql(table_name, conn, if_exists="append", index=False)
+        print(f"Loaded {len(df)} rows into {table_name}")
+        return len(df)
+    except Exception as e:
+        print(f"Skipping duplicates for {table_name}: {e}")
+        return 0
+
 
 
 def setup_database_complete():
@@ -68,63 +60,198 @@ def setup_database_complete():
 
     conn.close()
     print("=== COMPLETE SETUP DONE ===\n")
+setup_database_complete()
+
+# ----------------------------------------------------------
+# TABLE MENU
+# ----------------------------------------------------------
+def table_menu():
+    print("""
+===========================
+      TABLE MENU
+===========================
+1. Incidents
+2. Datasets
+3. Tickets
+4. Exit
+===========================
+""")
+    return input("Select a table: ").strip()
 
 
 # ----------------------------------------------------------
-# PART 10 — COMPREHENSIVE TESTING
+# CRUD MENU
 # ----------------------------------------------------------
-def run_comprehensive_tests():
-    print("\n===== RUNNING COMPREHENSIVE TEST SUITE =====")
+def crud_menu(table_name):
+    print(f"""
+===========================
+   {table_name.upper()} MENU
+===========================
+1. Create
+2. View All
+3. Update
+4. Delete
+5. Back to Table Menu
+===========================
+""")
+    return input("Enter choice: ").strip()
 
-    # 1. Test authentication
-    ok, msg = register_user("test_user", "TestPass123!", "user")
-    print("[REGISTER]", msg)
+# INCIDENT CRUD
+from app.data.incidents import (
+    insert_incident,
+    get_all_incidents,
+    update_incident_status,
+    delete_incident
+)
 
-    ok, msg = login_user("test_user", "TestPass123!")
-    print("[LOGIN]", msg)
+# DATASETS CRUD
+from app.data.datasets import (
+    insert_dataset,
+    get_all_datasets,
+    update_dataset_category,
+    delete_dataset
+)
 
-    # 2. Test Incident CRUD
-    conn = connect_database()
-    print("\nTesting Incident Creation...")
+# TICKETS CRUD
+from app.data.tickets import (
+    insert_ticket,
+    get_all_tickets,
+    update_ticket_status,
+    delete_ticket
+)
 
-    incident_id = insert_incident(
-        "2024-11-05",
-        "Test Incident",
-        "Low",
-        "Open",
-        "This is a test incident",
-        "test_user"
-    )
-    print(f"Incident #{incident_id} created successfully.")
-# ----------------------------------------------------------
-# MAIN EXECUTION FLOW
-# ----------------------------------------------------------
+
 def main():
-    print("======================================")
-    print("   WEEK 8 — DATABASE DEMO PROGRAM     ")
-    print("======================================")
+    print("===== INTELLIGENCE PLATFORM CRUD SYSTEM =====")
 
-    # Run Part 9 automatically
-    setup_database_complete()
+    # Init DB only (no automation/migration)
+    conn = connect_database()
+    create_all_tables(conn)
+    conn.close()
 
-    # Run Part 10 automatically
-    run_comprehensive_tests()
+    while True:
+        a = input("Existing user? Yes or No: ")
+        if a.lower() in ["yes", "y"]:
+            username = input("Username: ")
+            password = input("Password: ")
 
-    # Your normal demo:
-    print("\n=== DEMO: Creating a Regular Incident ===")
-    incident_id = insert_incident(
-        "2024-11-10",
-        "Phishing",
-        "High",
-        "Open",
-        "Suspicious link clicked.",
-        "alice"
-    )
-    print("Created incident with ID:", incident_id)
+            success, msg = login_user(username, password)
+            print(msg)
 
-    print("\n=== All Incidents ===")
-    print(get_all_incidents())
+            if success:
+                break  # login passed
+            else:
+                print("Invalid login. Try again.\n")
 
+        else:
+            username = input("Choose a username: ")
+            password = input("Choose a password: ")
+            register_user(username, password)
+            print("Registration complete. You can now log in.\n")
 
-if __name__ == "__main__":
-    main()
+    # Unified two-level menu navigation
+    while True:
+        table_choice = table_menu()
+
+        if table_choice == "1":   # Incidents
+            while True:
+                choice = crud_menu("Incidents")
+                if choice == "1":
+                    timestamp = input("Date: ")
+                    intype = input("Incident Type: ")
+                    severity = input("Severity: ")
+                    status = input("Status: ")
+                    desc = input("Description: ")
+                    incident_id = insert_incident(timestamp, intype, severity, status, desc, username)
+                    print("Incident created with ID:", incident_id)
+                elif choice == "2":
+                    print(get_all_incidents())
+                elif choice == "3":
+                    conn = connect_database()
+                    id_ = input("Incident ID: ")
+                    new_status = input("New Status: ")
+                    rows = update_incident_status(conn, id_, new_status)
+                    conn.close()
+                    print("Rows updated:", rows)
+                elif choice == "4":
+                    conn = connect_database()
+                    id_ = input("Incident ID to delete: ")
+                    rows = delete_incident(conn, id_)
+                    conn.close()
+                    print("Rows deleted:", rows)
+                elif choice == "5":
+                    break
+                else:
+                    print("Invalid option.")
+
+        elif table_choice == "2":   # Datasets
+            while True:
+                choice = crud_menu("Datasets")
+                if choice == "1":
+                    name = input("Dataset Name: ")
+                    rows = input("Number of Rows: ")
+                    columns = input("Number of Columns: ")
+                    uploaded_by = input("Uploaded_by: ")
+                    upload_date = input("Upload_date: ")
+                    dataset_id = insert_dataset(name, rows, columns, uploaded_by, upload_date)
+                    print("Dataset added with ID:", dataset_id)
+                elif choice == "2":
+                    print(get_all_datasets())
+                elif choice == "3":
+                    conn = connect_database()
+                    id_ = input("Dataset ID: ")
+                    new_name = input("New Name: ")
+                    rows = update_dataset_category(conn, id_, new_name)
+                    conn.close()
+                    print("Rows updated:", rows)
+                elif choice == "4":
+                    conn = connect_database()
+                    id_ = input("Dataset ID to delete: ")
+                    rows = delete_dataset(conn, id_)
+                    conn.close()
+                    print("Rows deleted:", rows)
+                elif choice == "5":
+                    break
+                else:
+                    print("Invalid option.")
+
+        elif table_choice == "3":   # Tickets
+            while True:
+                choice = crud_menu("Tickets")
+                if choice == "1":
+                    ticket_id = input("Ticket ID: ")
+                    priority = input("Priority: ")
+                    desc = input("Description: ")
+                    status = input("Status: ")
+                    assigned = input("Assigned To: ")
+                    created = input("Created Date: ")
+                    resolved = input("Resolution time in hours: ")
+                    new_id = insert_ticket(ticket_id, priority, desc, status,
+                                           assigned, created, resolved)
+                    print("Ticket created with ID:", new_id)
+                elif choice == "2":
+                    print(get_all_tickets())
+                elif choice == "3":
+                    conn = connect_database()
+                    id_ = input("Ticket ID: ")
+                    new_status = input("New Status: ")
+                    rows = update_ticket_status(conn, id_, new_status)
+                    conn.close()
+                    print("Rows updated:", rows)
+                elif choice == "4":
+                    conn = connect_database()
+                    id_ = input("Ticket ID to delete: ")
+                    rows = delete_ticket(conn, id_)
+                    conn.close()
+                    print("Rows deleted:", rows)
+                elif choice == "5":
+                    break
+                else:
+                    print("Invalid option.")
+
+        elif table_choice == "4":
+            print("Goodbye!")
+            break
+        else:
+            print("Invalid option.")
+main()
