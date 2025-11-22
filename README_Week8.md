@@ -155,36 +155,36 @@ You now have a scalable foundation suitable for:
 ---
 
 ###  1. Project Folder Structure
-![img.png](img.png)
+![img.png](screenshots/img.png)
 
 ---
 
 ###  2. Database Creation Success
 
-![img_1.png](img_1.png)
+![img_1.png](screenshots/img_1.png)
 
-![img_2.png](img_2.png)
+![img_2.png](screenshots/img_2.png)
 ---
 
 ###  3. User Migration Output
 
-![img_3.png](img_3.png)
+![img_3.png](screenshots/img_3.png)
 
 ---
 
 ###  4. Table Menu
 
-![img_4.png](img_4.png)
+![img_4.png](screenshots/img_4.png)
 
 ---
 
 ###  5.Table specific Menu
 
-![img_5.png](img_5.png)
+![img_5.png](screenshots/img_5.png)
 ---
-![img_6.png](img_6.png)
+![img_6.png](screenshots/img_6.png)
 ---
-![img_7.png](img_7.png)
+![img_7.png](screenshots/img_7.png)
 ---
 
 
