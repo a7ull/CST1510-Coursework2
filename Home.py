@@ -63,7 +63,7 @@ with tab_register:
             st.error("Passwords do not match")
         else:
             # For a production app you'd call a user_service or DB insert with password hashing.
-            # For now we add to session_state.users for demo (or call Week8 migration if available)
+
             if "users" not in st.session_state:
                 st.session_state.users = {}
             if register_username in st.session_state.users:
