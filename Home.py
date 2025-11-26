@@ -13,7 +13,7 @@ if "username" not in st.session_state:
 if "role" not in st.session_state:
     st.session_state.role = ""
 
-st.title("🔐 Intelligence Platform — Login")
+st.title("Intelligence Platform — Login")
 
 conn = get_db_conn()  # cached DB connection
 
