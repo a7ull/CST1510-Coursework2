@@ -16,7 +16,7 @@ if not st.session_state.logged_in:
 
 conn = get_db_conn()
 
-st.title("📊 Dashboard")
+st.title("Dashboard")
 st.success(f"Welcome, {st.session_state.username}!")
 
 # KPIs

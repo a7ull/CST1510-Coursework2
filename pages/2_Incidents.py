@@ -10,7 +10,7 @@ if "logged_in" not in st.session_state or not st.session_state.logged_in:
         st.experimental_set_query_params(page="home")
     st.stop()
 
-st.title("🚨 Cyber Incidents")
+st.title("Cyber Incidents")
 
 # CREATE form
 with st.form("new_incident"):

@@ -10,7 +10,7 @@ if "logged_in" not in st.session_state or not st.session_state.logged_in:
     st.stop()
 
 conn = get_db_conn()
-st.title("📈 Analytics")
+st.title("Analytics")
 
 try:
     incidents = get_all_incidents()
