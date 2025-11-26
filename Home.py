@@ -15,7 +15,7 @@ if "role" not in st.session_state:
 
 st.title("Intelligence Platform — Login")
 
-conn = get_db_conn()  # cached DB connection
+conn = get_db_conn()
 
 tab_login, tab_register = st.tabs(["Login", "Register"])
 
@@ -25,12 +25,12 @@ with tab_login:
     login_password = st.text_input("Password", type="password", key="login_password")
 
     if st.button("Log in"):
-        # verify_user should return True/False (and optionally role). Adjust if your function differs.
+
         ok = False
         role = None
         try:
             res = login_user(login_username,login_password)
-            # If verify_user returns tuple (True, role) adapt; otherwise assume boolean.
+
             if isinstance(res, tuple):
                 ok, role = res
             else:
@@ -62,7 +62,7 @@ with tab_register:
         elif register_password != register_confirm:
             st.error("Passwords do not match")
         else:
-            # For a production app you'd call a user_service or DB insert with password hashing.
+
 
             if "users" not in st.session_state:
                 st.session_state.users = {}
