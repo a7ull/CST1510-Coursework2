@@ -63,6 +63,7 @@ try:
                 try:
                     conn = get_db_conn()
                     update_ticket_status(conn, sel, new_status)
+                    conn.commit()
                     conn.close()
                     st.success("Updated")
 
@@ -73,6 +74,7 @@ try:
             try:
                 conn = get_db_conn()
                 delete_ticket(conn, sel)
+                conn.commit()
                 conn.close()
                 st.success("Deleted")
 

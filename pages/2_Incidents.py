@@ -60,6 +60,7 @@ try:
                 try:
                     conn = get_db_conn()
                     update_incident_status(conn, sel,new_status)
+                    conn.commit()
                     st.success("Updated")
                     conn.close()
                 except Exception as e:
@@ -70,6 +71,7 @@ try:
             try:
                 conn = get_db_conn()
                 delete_incident(conn, sel)
+                conn.commit()
                 st.success("Deleted")
                 conn.close()
             except Exception as e:

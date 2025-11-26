@@ -56,6 +56,7 @@ try:
                 try:
                     conn = get_db_conn()
                     update_dataset_name(conn, sel,new_name)
+                    conn.commit()
                     conn.close()
                     st.success("Updated")
 
@@ -66,6 +67,7 @@ try:
             try:
                 conn = get_db_conn()
                 delete_dataset(conn, sel)
+                conn.commit()
                 conn.close()
                 st.success("Deleted")
 
