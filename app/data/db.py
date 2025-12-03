@@ -1,8 +1,6 @@
 import sqlite3
-from pathlib import Path
-
-DB_PATH = Path("DATA/intelligence_platform.db")
-
-def connect_database():
-    """Connect to SQLite database."""
-    return sqlite3.connect(str(DB_PATH))
+DB_NAME = "DATA/intelligence_platform.db"
+def connect_db():
+    conn = sqlite3.connect(DB_NAME)
+    conn.row_factory = sqlite3.Row
+    return conn

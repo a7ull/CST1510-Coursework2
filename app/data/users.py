@@ -1,22 +1,25 @@
-from app.data.db import connect_database
-
-def get_user_by_username(username):
-    conn = connect_database()
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
-    user = cursor.fetchone()
-    conn.close()
-    return user
-
-def insert_user(username, password_hash, role="user"):
-    conn = connect_database()
-    cursor = conn.cursor()
-
-    cursor.execute("""
-        INSERT INTO users (username, password_hash, role)
+import hashlib
+from app.data.db import connect_db
+def hash_password(password):
+    return hashlib.sha256(password.encode()).hexdigest()
+def create_user(username, password, role):
+    conn = connect_db()
+    cur = conn.cursor()
+    hashed = hash_password(password)
+    cur.execute("""
+        INSERT INTO users (username, password, role)
         VALUES (?, ?, ?)
-    """, (username, password_hash, role))
-
+    """, (username, hashed, role))
     conn.commit()
     conn.close()
+def check_login(username, password):
+    conn = connect_db()
+    cur = conn.cursor()
+    hashed = hash_password(password)
+    cur.execute("""
+        SELECT * FROM users
+        WHERE username=? AND password=?
+    """, (username, hashed))
+    user = cur.fetchone()
+    conn.close()
+    return user
