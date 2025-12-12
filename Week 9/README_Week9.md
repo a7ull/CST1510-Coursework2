@@ -5,13 +5,11 @@
 
 ## Overview
 This Streamlit app connects to the Week 8 database and exposes:
-- Login / Register (demo)
-- Dashboard 
+- Login / Register 
 - Incidents CRUD
 - Datasets CRUD
 - IT Tickets CRUD
-- Simple analytics pages
-- Settings page
+
 
 
 ## Database

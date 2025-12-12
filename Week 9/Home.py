@@ -7,9 +7,6 @@ from app.data.incidents import get_all_incidents, add_incident, delete_incident
 from app.data.datasets import get_all_datasets, add_dataset, delete_dataset
 from app.data.tickets import get_all_tickets, add_ticket, delete_ticket
 
-# ai import
-from app.ai.ai_service import ask_ai
-
 # Streamlit config
 st.set_page_config(page_title="Multi-Domain Intelligence Platform", layout="wide")
 st.title("Multi-Domain Intelligence Platform")
@@ -18,9 +15,7 @@ st.title("Multi-Domain Intelligence Platform")
 if "user" not in st.session_state:
     st.session_state.user = None
 
-# ==========================
 # AUTHENTICATION PAGE
-# ==========================
 if st.session_state.user is None:
     st.subheader("User Authentication")
     mode = st.radio("Choose Mode", ["Login", "Register"])
@@ -44,32 +39,24 @@ if st.session_state.user is None:
             else:
                 st.error("Invalid credentials")
 
-# =========================================
-# DASHBOARD (after successful login)
-# =========================================
+# DASHBOARD
 else:
     username = st.session_state.user["username"]
     role = st.session_state.user["role"]
 
     st.sidebar.success(f"Logged in as: {username} ({role})")
 
-    # ==========================
     # ROLE-BASED PAGE ACCESS
-    # ==========================
     if role == "cyber":
-        allowed_pages = ["Cybersecurity", "AI Assistant"]
+        allowed_pages = ["Cybersecurity"]
     elif role == "data":
-        allowed_pages = ["Data Science", "AI Assistant"]
+        allowed_pages = ["Data Science"]
     elif role == "it":
-        allowed_pages = ["IT Operations", "AI Assistant"]
-    else:
-        allowed_pages = ["AI Assistant"]
+        allowed_pages = ["IT Operations"]
 
     page = st.sidebar.selectbox("Select Domain", allowed_pages)
 
-    # ==========================
     # CYBERSECURITY (CYBER ROLE ONLY)
-    # ==========================
     if page == "Cybersecurity":
 
         if role != "cyber":
@@ -106,9 +93,7 @@ else:
                 st.success("Incident deleted")
                 st.rerun()
 
-    # ==========================
     # DATA SCIENCE (DATA ROLE ONLY)
-    # ==========================
     elif page == "Data Science":
 
         if role != "data":
@@ -145,9 +130,7 @@ else:
                 st.success("Dataset deleted")
                 st.rerun()
 
-    # ==========================
     # IT OPERATIONS (IT ROLE ONLY)
-    # ==========================
     elif page == "IT Operations":
 
         if role != "it":
@@ -186,24 +169,7 @@ else:
                 st.success("Ticket deleted")
                 st.rerun()
 
-    # ==========================
-    # AI ASSISTANT (ACCESS FOR ALL)
-    # ==========================
-    elif page == "AI Assistant":
-        st.header("AI Assistant")
-        prompt = st.text_area("Ask the AI anything:")
-
-        if st.button("Ask AI"):
-            if prompt.strip() == "":
-                st.error("Please enter a question.")
-            else:
-                answer = ask_ai(prompt)
-                st.subheader("AI Response:")
-                st.write(answer)
-
-    # ==========================
     # LOGOUT
-    # ==========================
     if st.sidebar.button("Logout"):
         st.session_state.user = None
         st.rerun()
