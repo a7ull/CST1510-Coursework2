@@ -1,9 +1,9 @@
 #Importing modules
 import bcrypt
 import os
-USER_DATA_FILE = "users.txt"
+USER_DATA_FILE = "users.txt"  #User details are stored in users.txt
 #Function definitions
-def hash_password(plain_text_password):
+def hash_password(plain_text_password):        #Function to hash the password
     password_bytes = plain_text_password.encode("utf-8")
     salt = bcrypt.gensalt()
     hashed = bcrypt.hashpw(password_bytes, salt)
@@ -58,7 +58,7 @@ def validate_password(password):
     if len(password) > 50:
         return False, "Password too long (max 50)."
     return True, ""
-def display_menu():
+def display_menu():            #Menu
     print("\n" + "=" * 50)
     print(" MULTI-DOMAIN INTELLIGENCE PLATFORM")
     print(" Secure Authentication System")
