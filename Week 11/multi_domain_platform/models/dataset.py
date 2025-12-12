@@ -1,5 +1,5 @@
 from multi_domain_platform.database.db import connect_db
-
+#Declaring dataset class
 class Dataset:
     def __init__(self, dataset_id, name, rows, columns, uploaded_by, upload_date):
         self.dataset_id = dataset_id
