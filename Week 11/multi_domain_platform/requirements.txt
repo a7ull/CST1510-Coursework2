@@ -1,0 +1,6 @@
+bcrypt==4.2.0
+pandas==2.3.3
+plotly
+streamlit
+csv
+os
