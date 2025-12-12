@@ -1,8 +1,6 @@
 from google import genai
 import os
-
 Gemini_KEY = os.getenv("GEMINI_API_KEY", os.getenv("test", ""))
-print(Gemini_KEY)
 client = None
 if Gemini_KEY:
     client = genai.Client(api_key=Gemini_KEY)
