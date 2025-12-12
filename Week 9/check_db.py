@@ -1,3 +1,4 @@
+#Connecting the database and checking if connection is established
 from app.data.db import connect_db
 conn = connect_db()
 cur = conn.cursor()
