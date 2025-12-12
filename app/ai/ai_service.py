@@ -1,5 +1,11 @@
 from google import genai
-client = genai.Client(api_key="AIzaSyDPfPQ3zmGk5ut-1BQ2gh1ALNK_6vt1l5c")
+import os
+
+Gemini_KEY = os.getenv("GEMINI_API_KEY", os.getenv("test", ""))
+print(Gemini_KEY)
+client = None
+if Gemini_KEY:
+    client = genai.Client(api_key=Gemini_KEY)
 def ask_ai(prompt):
     response = client.models.generate_content(
         model="gemini-2.5-flash",
